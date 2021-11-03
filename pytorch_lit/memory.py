@@ -2,12 +2,27 @@ import torch
 
 
 class Memory:
+    str_to_torch_dtype_dict = {
+        'bool': torch.bool,
+        'uint8': torch.uint8,
+        'int8': torch.int8,
+        'int16': torch.int16,
+        'int32': torch.int32,
+        'int64': torch.int64,
+        'float16': torch.float16,
+        'float32': torch.float32,
+        'float64': torch.float64,
+        'complex64': torch.complex64,
+        'complex128': torch.complex128
+    }
     _tensor_storage = {}
     _k = 0
 
     @staticmethod
-    def alloc(shape, device):
-        t = torch.empty(shape, dtype=torch.float, device=device)
+    def alloc(shape, dtype='float32', device='cpu'):
+        if not isinstance(dtype, torch.dtype):
+            dtype = Memory.str_to_torch_dtype_dict[dtype]
+        t = torch.empty(shape, dtype=dtype, device=device)
         key = Memory._k
         setattr(t, "__litKey", key)
         Memory._tensor_storage[key] = t

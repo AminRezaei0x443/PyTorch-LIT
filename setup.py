@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pytorch-lit',
-    version='0.1.0',
+    version='0.1.5',
     description='Lite Inference Toolkit(LIT) for PyTorch',
     license='MIT',
     packages=find_packages(),
