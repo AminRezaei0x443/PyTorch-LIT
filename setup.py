@@ -9,6 +9,6 @@ setup(
     author='Amin Rezaei',
     author_email='AminRezaei0x443@gmail.com',
     keywords=['pytorch-lit', 'lit', 'lite-inference-toolkit', 'pytorch'],
-    url='https://github.com/AminRezaei0x443/pytorch-lit',
+    url='https://github.com/AminRezaei0x443/PyTorch-LIT',
     install_requires=['torch', 'numpy', 'tqdm']
 )
