@@ -1,4 +1,6 @@
 # PyTorch-LIT
+[![PyPI version](https://img.shields.io/badge/pytorch--lit-0.1.5-informational?style=flat-square&color=C51BA3)](https://pypi.org/project/pytorch-lit/)
+
 **PyTorch-LIT** is the Lite Inference Toolkit (LIT) for PyTorch which focuses on easy and fast inference of large models on end-devices.
 
 With the fast growth of deep learning research, models are growing in terms of parameters and complexity which makes it difficult to run the models on available end devices. For example, GPT-J which has 6B parameters just requires 24 GB of RAM in full-precision mode to get ready for execution which may be impossible in most systems; 
