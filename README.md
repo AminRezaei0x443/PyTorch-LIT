@@ -1,5 +1,5 @@
 # PyTorch-LIT
-[![PyPI version](https://img.shields.io/badge/pytorch--lit-0.1.5-informational?style=flat-square&color=C51BA3)](https://pypi.org/project/pytorch-lit/)
+[![PyPI version](https://img.shields.io/badge/pytorch--lit-0.1.6-informational?style=flat-square&color=C51BA3)](https://pypi.org/project/pytorch-lit/)
 
 **PyTorch-LIT** is the Lite Inference Toolkit (LIT) for PyTorch which focuses on easy and fast inference of large models on end-devices.
 
@@ -19,13 +19,21 @@ pip install pytorch-lit
 2. You have to save the model's weight in a way that toolkit can use
 
 ```python
-from pytorch_lit.export import prepare_params
+from pytorch_lit import prepare_params
 
 weights = {} # your model's parameters (state_dict)
 # change the directory to save your model and specify data-type
 prepare_params(weights, ".models/my-model", dtype="float32")
 ```
 
+**Note:** If you have trouble loading large state_dict in small RAM, use `PartialLoader` instead of `torch.load`:
+```python
+from pytorch_lit import prepare_params, PartialLoader
+
+weights = PartialLoader("state_dict.bin") # your model's parameters (state_dict)
+# change the directory to save your model and specify data-type
+prepare_params(weights, ".models/my-model", dtype="float32")
+```
 3. After preparing the weights, you can infer your model
 
 ```python
@@ -51,6 +59,7 @@ This is a work in progress that will require further development before it can b
 - [ ] C++ extension for PyTorch jit, so the solution applies to the majority of production end devices
 - [ ] Add functions to make it easier to export large models to onnx or trace with jit
 - [ ] Use better and faster format than numpy memmap
+- [x] Load large state_dict partially when memory is not enough
 
 Contributions are welcome; to discuss your idea further, open an issue with the `discussion` tag. Finally, you can submit a pull request to merge your fork.
 
