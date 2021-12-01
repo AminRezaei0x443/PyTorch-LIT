@@ -45,6 +45,9 @@ class PartialLoader:
         for e in self._exits:
             e.__exit__()
 
+    def keys(self):
+        return self.meta.keys()
+
     def read_key(self, key, device="cpu"):
         info = self.meta[key].tolist()
         mc = 5
@@ -89,4 +92,3 @@ class PartialLoader:
             data.append(int(x))
         t = torch.tensor(data, dtype=st.dtype, device=st.device)
         return t
-

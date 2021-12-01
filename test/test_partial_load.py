@@ -33,6 +33,19 @@ class PartialLoadingTest(unittest.TestCase):
         loader.close()
         os.remove(".tmp_file")
 
+    def test_keys(self):
+        f16_tensor = torch.rand((200, 1, 10), dtype=torch.float16)
+        int_tensor = torch.randint(0, 1000, (200, 1, 10), dtype=torch.int)
+        state_dict = {
+            "f16_tensor": f16_tensor,
+            "int_tensor": int_tensor,
+        }
+        torch.save(state_dict, ".tmp_file")
+        loader = PartialLoader(".tmp_file")
+        self.assertEqual(set(loader.keys()), set(state_dict.keys()))
+        loader.close()
+        os.remove(".tmp_file")
+
 
 if __name__ == '__main__':
     unittest.main()
