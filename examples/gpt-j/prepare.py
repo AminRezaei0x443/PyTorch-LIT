@@ -1,4 +1,4 @@
-from pytorch_lit.export import prepare_params
+from pytorch_lit import prepare_params
 import torch
 
 if __name__ == "__main__":
