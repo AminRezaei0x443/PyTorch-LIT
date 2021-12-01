@@ -6,13 +6,30 @@ import os
 
 class PartialLoadingTest(unittest.TestCase):
     def test_read(self):
-        t = torch.rand((200, 1, 10), dtype=torch.float16)
+        f16_tensor = torch.rand((200, 1, 10), dtype=torch.float16)
         torch.save({
-            "name": t
+            "f16_tensor": f16_tensor,
         }, ".tmp_file")
         loader = PartialLoader(".tmp_file")
-        t2 = loader.read_key("name")
-        self.assertTrue(torch.equal(t, t2))
+        f16_tensor_rcv = loader.read_key("f16_tensor")
+        self.assertTrue(torch.equal(f16_tensor, f16_tensor_rcv))
+        loader.close()
+        os.remove(".tmp_file")
+
+    def test_mixed_types(self):
+        f16_tensor = torch.rand((200, 1, 10), dtype=torch.float16)
+        int_tensor = torch.randint(0, 1000, (200, 1, 10), dtype=torch.int)
+        torch.save({
+            "f16_tensor": f16_tensor,
+            "int_tensor": int_tensor,
+        }, ".tmp_file")
+        loader = PartialLoader(".tmp_file")
+        f16_tensor_rcv = loader.read_key("f16_tensor")
+        self.assertTrue(torch.equal(f16_tensor, f16_tensor_rcv))
+        self.assertTrue(f16_tensor.dtype == f16_tensor_rcv.dtype)
+        int_tensor_rcv = loader.read_key("int_tensor")
+        self.assertTrue(torch.equal(int_tensor, int_tensor_rcv))
+        self.assertTrue(int_tensor.dtype == int_tensor_rcv.dtype)
         loader.close()
         os.remove(".tmp_file")
 

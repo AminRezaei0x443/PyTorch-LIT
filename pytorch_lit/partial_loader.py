@@ -7,6 +7,8 @@ import io
 
 class PartialLoader:
     tensor_func = None
+    _dtype_meta = {0: 0}
+    _dtype_meta_r = {}
 
     def __init__(self, path):
         self.path = path
@@ -45,17 +47,28 @@ class PartialLoader:
 
     def read_key(self, key, device="cpu"):
         info = self.meta[key].tolist()
-        print(info)
-        _id, num_el, storage_offset, size_l = info[:4]
-        size = info[4:4+size_l]
-        stride_l = info[4+size_l]
-        stride = info[5+size_l:5+size_l+stride_l]
+        mc = 5
+        _id, type_id, num_el, storage_offset, size_l = info[:mc]
+        size = info[mc:mc+size_l]
+        stride_l = info[mc+size_l]
+        stride = info[mc+1+size_l:mc+1+size_l+stride_l]
         size = tuple(size)
         stride = tuple(stride)
-        storage = self.zf.get_storage_from_record(f'data/{_id}', num_el, torch.float16).storage()
-        t = torch.tensor([], dtype=torch.float16, device=device)
+        dtype = PartialLoader._dtype_meta_r[type_id]
+        storage = self.zf.get_storage_from_record(f'data/{_id}', num_el, dtype).storage()
+        t = torch.tensor([], dtype=dtype, device=device)
         t.set_(storage, storage_offset, size, stride)
         return t
+
+    @classmethod
+    def _add_dtype(cls, dtype):
+        if dtype in cls._dtype_meta:
+            return cls._dtype_meta[dtype]
+        n_id = cls._dtype_meta[0] + 1
+        cls._dtype_meta[dtype] = n_id
+        cls._dtype_meta[0] = n_id
+        cls._dtype_meta_r[n_id] = dtype
+        return n_id
 
     @staticmethod
     def _persistent_loader(saved_id):
@@ -67,7 +80,8 @@ class PartialLoader:
     @staticmethod
     def _rebuild_tensor(st, storage_offset, size, stride):
         _id = getattr(st, "__t")
-        data = [int(_id[2]), int(_id[4]), int(storage_offset), len(size)]
+        type_id = PartialLoader._add_dtype(_id[1](0).dtype)
+        data = [int(_id[2]), int(type_id), int(_id[4]), int(storage_offset), len(size)]
         for x in size:
             data.append(int(x))
         data.append(len(stride))
