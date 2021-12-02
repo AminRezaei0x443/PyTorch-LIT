@@ -1,5 +1,5 @@
 # PyTorch-LIT
-[![PyPI version](https://img.shields.io/badge/pytorch--lit-0.1.6-informational?style=flat-square&color=C51BA3)](https://pypi.org/project/pytorch-lit/)
+[![PyPI version](https://img.shields.io/badge/pytorch--lit-0.1.7-informational?style=flat-square&color=C51BA3)](https://pypi.org/project/pytorch-lit/)
 
 **PyTorch-LIT** is the Lite Inference Toolkit (LIT) for PyTorch which focuses on easy and fast inference of large models on end-devices.
 

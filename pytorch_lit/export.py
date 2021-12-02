@@ -31,7 +31,7 @@ def _standardize_params(parameters):
     if isinstance(parameters, dict):
         return {
             "keys": parameters.keys(),
-            "get": lambda d, k: d[k]
+            "get": lambda k: parameters[k]
         }
     if isinstance(parameters, PartialLoader):
         return {
